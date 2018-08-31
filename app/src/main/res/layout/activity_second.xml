@@ -57,11 +57,33 @@
             android:id="@+id/et_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:maxLines="1"
+            android:imeOptions="actionNext"
             android:hint="Date" />
 
+        <TextView
+            android:id="@+id/etupdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Update"
+            android:text="Update Your Info"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@android:color/background_dark"
 
+            />
 
+        <Button
+            android:id="@+id/Bupdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="Submit"
+            android:textSize="30sp"
+            android:maxLines="1"
+            android:text="Submit"
+            android:clickable="true"
+            />
 
     </LinearLayout>
 

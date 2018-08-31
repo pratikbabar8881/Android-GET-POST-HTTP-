@@ -1,10 +1,18 @@
 package com.example.deepak.localto_doapp;
 
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -13,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.Buffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,9 +30,10 @@ import java.util.List;
 
 public class ThirdActivity extends AppCompatActivity {
     TextView  date;
-    List<TaskDTO> li;
+    List<TaskDTO> list;
     RetroRecycleAdapter adapter;
-    ServerResponseAdapter responseAdapter1;
+    ServerResponseAdapterThird responseAdapter1;
+    RecyclerView recyclerView;
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -43,65 +53,68 @@ public class ThirdActivity extends AppCompatActivity {
         TextView week = findViewById(R.id.Txtday);
         week.setText(dayOfTheWeek);
 
-        //DatabaseHandler db = new DatabaseHandler(this);
-        //List<ToDoRetro> li1 = db.displayChecked();
-        RecyclerView recyclerView = findViewById(R.id.recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //final CheckedAdapter recyclerAdapter = new CheckedAdapter(this, li1);
-        //recyclerView.setAdapter(recyclerAdapter);
+        list = new ArrayList<TaskDTO>();
 
-
-
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String BASE_URL="http://192.168.100.6:8000/done/";
-
-                try {
-                    URL url = new URL(BASE_URL);
-                    HttpURLConnection con=(HttpURLConnection) url.openConnection();
-                    con.setRequestMethod("GET");
-                    int responsecode=con.getResponseCode();
-                    System.out.println("response code is "+responsecode);
-
-                    BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    StringBuffer response= new StringBuffer();
-                    String container="";
-                    while((container=br.readLine())!=null)
-                    {
-                        response.append(container);
-                    }
-                    br.close();
-                    System.out.println(response);
-                    Wrapper task=new Gson().fromJson(response.toString(),Wrapper.class);
-                    System.out.println(task.toString());
-                    li.addAll(task.getList());
-                    responseAdapter1.notifyDataSetChanged();
-                    //Log.d(TAG, "onCreate: ");
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-                //Log.d(TAG, "run: running");
-
-            }
-        }).start();
-
-        recyclerView = findViewById(R.id.re);
+        recyclerView = findViewById(R.id.recycler);
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        adapter = new RetroRecycleAdapter(this,list);
+        recyclerView.setAdapter(adapter);
 
-        li = new ArrayList<TaskDTO>();
+        if (list.isEmpty()) {
+            new HttpGet().execute();
+        }
 
 
-        final ServerResponseAdapter recyclerAdapter1 = new ServerResponseAdapter(this, li);
-        recyclerView.setAdapter(recyclerAdapter1);
 
-*/
 
+        //    DatabaseHandler db = new DatabaseHandler(this);
+//        List<ToDoList> li = db.display();
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ServerResponseAdapterThird recyclerAdapter = new ServerResponseAdapterThird(this,list);
+        recyclerView.setAdapter(recyclerAdapter);
+
+    }
+
+    public class HttpGet extends AsyncTask<Void,Void,Void>
+    {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                String BASE_URl = "http://192.168.100.21:8000/done";
+                URL url = new URL(BASE_URl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.connect();
+                int responseCode=conn.getResponseCode();
+                conn.setRequestMethod("GET");
+
+                System.out.println("Your response code is"+responseCode);
+                System.out.println("your url is"+ url);
+
+                BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuffer response=new StringBuffer();
+                String Container="";
+                while((Container=br.readLine())!=null)
+                {
+                    response.append(Container);
+
+                }
+                System.out.println(response);
+                Wrapper task=new Gson().fromJson(response.toString(),Wrapper.class);
+                System.out.println(task);
+                list.addAll(task.getList());
+                adapter.notifyDataSetChanged();
+
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 }
 

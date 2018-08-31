@@ -16,14 +16,12 @@ public class Wrapper
 
     public Wrapper(List<TaskDTO> list) {
         this.list = list;
-
-
-
     }
 
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Wrapper{" +
                 "list=" + list +
                 '}';

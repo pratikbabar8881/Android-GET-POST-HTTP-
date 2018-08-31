@@ -31,17 +31,23 @@ public class TaskDTO
         this.date = date;
     }
 
+
     public int getAuto_increment_id() {
         return auto_increment_id;
+
+
+
     }
 
     public void setAuto_increment_id(int auto_increment_id) {
         this.auto_increment_id = auto_increment_id;
+
     }
 
     public String getDone() {
         return done;
     }
+
 
     public void setDone(String done) {
         this.done = done;

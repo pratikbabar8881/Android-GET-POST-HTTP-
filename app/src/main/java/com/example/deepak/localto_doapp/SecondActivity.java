@@ -2,8 +2,11 @@ package com.example.deepak.localto_doapp;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -11,13 +14,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -26,12 +34,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.Buffer;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class SecondActivity extends AppCompatActivity {
+    private static final String TAG ="todoapp" ;
+    public static final String MyPREFERENCES = "MyPrefs" ;
     EditText subject;
     TextView  date1;
     EditText datepicker;
@@ -41,13 +52,11 @@ public class SecondActivity extends AppCompatActivity {
     int Year_x, day_x, month_x;
 
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         subject = findViewById(R.id.subject);
         date1 = findViewById(R.id.tvday1);
         Date d1=Calendar.getInstance().getTime();
@@ -107,21 +116,47 @@ public class SecondActivity extends AppCompatActivity {
                 //startActivity(in);
 
 
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        /*Update here */
+
+        final TextView update= findViewById(R.id.etupdate);
+        Button click=findViewById(R.id.Bupdate);
+
+        click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Intent in=new Intent(SecondActivity.this,FourthActivity.class);
+                startActivity(in);
+       }
+
+        });
     }
 
     public void POST()
     {
+
         new Thread(new Runnable()
         {
             @Override
             public void run() {
                 try {
 
-                    String BASE_URL = "http://192.168.100.6:8000";
+                    String BASE_URL = "https://demo-todo-rest.herokuapp.com/";
                     URL url = new URL(BASE_URL);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
+
+                    String token = getToken();
+                    SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+                    String tokenvalue= sharedpreferences.getString("tokenkey","");
+                    Log.d(TAG, "run: ");
+
                     conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                    conn.setRequestProperty("Authorization",tokenvalue);
                     conn.getURL();
                     System.out.println(conn.getURL());
                     conn.setDoOutput(true);
@@ -162,7 +197,18 @@ public class SecondActivity extends AppCompatActivity {
 
 
 
+
 }
+    public String getToken() {
+
+        SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        String tokenvalue= sharedpreferences.getString("tokenkey","");
+        return  tokenvalue;
+
+
+    }
+
 }
 
 
@@ -170,7 +216,8 @@ public class SecondActivity extends AppCompatActivity {
                     if (subject.getText().toString() != null || date.getText().toString() != null) {
                         Intent in = new Intent(SecondActivity.this, FirstActivity.class);
 
-                        Log.d("TAG", "onClick: " + subject.getText().toString() + "" + date2.getText().toString());
+
+                                           Log.d("TAG", "onClick: " + subject.getText().toString() + "" + date2.getText().toString());
                         final DatabaseHandler databaseHandler = new DatabaseHandler(SecondActivity.this);
                         //databaseHandler.addtodo(new ToDoRetro(subject.getText().toString(), date2.getText().toString()));
                         startActivity(in);
