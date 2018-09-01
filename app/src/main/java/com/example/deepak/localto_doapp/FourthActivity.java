@@ -1,5 +1,9 @@
 package com.example.deepak.localto_doapp;
 
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,6 +28,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 
 public class FourthActivity extends AppCompatActivity
 {
@@ -28,46 +38,72 @@ public class FourthActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_four);
 
+        //Log.d(TAG, "onCreate: " + id);
         final EditText subject,date,auto_increment_id,done;
         Button update;
 
 
         subject=findViewById(R.id.etUpdateSubject);
         date=findViewById(R.id.UpdateDate);
-        auto_increment_id=findViewById(R.id.etUpdateId);
-        done=findViewById(R.id.UpdateDone);
+       // auto_increment_id=findViewById(R.id.etUpdateId);
+         //done=findViewById(R.id.UpdateDone);
         update=findViewById(R.id.btnUpdate);
 
+        Intent in=getIntent();
+        String subjectUpdate = in.getExtras().getString("subject");
+        String dateUpdte=in.getExtras().getString("date");
+        subject.setText(subjectUpdate);
+        subject.setSelection(subject.getText().length());
+        date.setText(dateUpdte);
+
         /////////////////////////////
+
+        ImageButton ib1=findViewById(R.id.ib_datePicker);
+        ib1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar cal=Calendar.getInstance();
+                int year=cal.get(Calendar.YEAR);
+                int month=cal.get(Calendar.MONTH);
+                int day=cal.get(Calendar.DAY_OF_MONTH);
+
+
+                DatePickerDialog dp=new DatePickerDialog(FourthActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                        date.setText( i2 + "/" + (i1+1) + "/" + i);
+                    }
+                },year,month,day);
+                dp.show();
+            }
+        });
 
 
         /////////////////////////////
-        /*update.setOnClickListener(new View.OnClickListener() {
+        update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 String sub=subject.getText().toString();
-                int id = Integer.parseInt(auto_increment_id.getText().toString());
-                String doing=done.getText().toString();
+         //       int id = Integer.parseInt(auto_increment_id.getText().toString());
+                //String doing=done.getText().toString();
                 String date1=date.getText().toString();
 
 
-                TaskDTO details=new TaskDTO(sub,date1,id,doing);
-                *//*JsonArray js=new JsonArray();
-                JsonObject jProduct=new JsonObject();*//*
+                TaskUpdate details=new TaskUpdate(sub,date1);
+                JsonArray js=new JsonArray();
+                JsonObject jProduct=new JsonObject();
 
 
                 JSONArray jProducts = new JSONArray();
-                JSONObject jProduct = new JSONObject();
+                JSONObject jProduct1 = new JSONObject();
 
                     try {
-                        jProduct.put("subject", details.subject);
-                        jProduct.put("date", details.date);
-                        jProduct.put("auto_increment_id", details.auto_increment_id);
-                        jProduct.put("done", details.done);
-                        jProducts.put(jProduct);
+                        jProduct1.put("subject", details.subject);
+                        jProduct1.put("date", details.date);
+                        jProducts.put(jProduct1);
 
-                         String jsonData = jProduct.toString();
+                         String jsonData = jProduct1.toString();
 
 
                 new sendPut().execute(jsonData);
@@ -75,26 +111,43 @@ public class FourthActivity extends AppCompatActivity
                     {
                         e.printStackTrace();
                     }
+                    Intent in= new Intent(FourthActivity.this,FirstActivity.class);
+                    startActivity(in);
             }
         });
-*/
+
     }
 
     class sendPut extends AsyncTask<String,Void,Void>
     {
 
+        Intent intent = getIntent();
+        String id = intent.getExtras().getString("id");
+
         @Override
         protected Void doInBackground(String... params) {
 
+
+
             try {
                 String jsonData = params[0];
-                String BASE_URl = "http://192.168.100.21:8000/237/";
+                String BASE_URl = "https://demo-todo-rest.herokuapp.com";
                 Log.d(TAG, "doInBackground: ");
-                URL url = new URL(BASE_URl);
+                URL url = new URL(String.format("%s/%s/",BASE_URl,id));
                 HttpURLConnection conn=(HttpURLConnection) url.openConnection();
                 //conn.connect();
+
+                /////////////////////////
+
+                SharedPreferences sharedPreferences=getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+               String token= getToken();
+
+                Log.d(TAG, "doInBackground: "+token);
+
+                ////////////////////////
                 conn.setRequestMethod("PUT");
                 conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+               conn.setRequestProperty("Authorization",token);
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
 
@@ -145,6 +198,15 @@ public class FourthActivity extends AppCompatActivity
             return null;
         }
 
+        public String getToken() {
+
+            SharedPreferences sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+
+            String tokenvalue= sharedpreferences.getString("tokenkey","");
+            return  tokenvalue;
+
+
+        }
     }
 
 }

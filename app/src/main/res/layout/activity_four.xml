@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,16 +10,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Update Your Data"
-        android:textStyle="bold" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update Your Data"
+            android:textStyle="bold" />
+
 
         <EditText
             android:id="@+id/etUpdateSubject"
@@ -33,21 +36,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Date"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
              />
 
-        <EditText
-            android:id="@+id/etUpdateId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="ID"
-            android:inputType="text" />
 
-        <EditText
-            android:id="@+id/UpdateDone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Status"
-            />
 
         <Button
             android:id="@+id/btnUpdate"
@@ -55,7 +48,19 @@
             android:layout_height="wrap_content"
             android:text="Update" />
 
+
     </LinearLayout>
 
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/ib_datePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_calender"
+        android:background="@android:color/transparent"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="75dp"
+        android:layout_marginRight="15dp"/>
+
+
+</RelativeLayout>

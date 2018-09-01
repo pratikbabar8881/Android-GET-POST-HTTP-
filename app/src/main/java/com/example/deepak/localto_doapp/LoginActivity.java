@@ -28,13 +28,14 @@ import java.nio.charset.StandardCharsets;
 public class LoginActivity extends AppCompatActivity
 {
     EditText username,password;
-    Button login;
+    Button login,signin;
     public static String TAG="todoapp";
 
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String  usernamekey="namekey";
     public static final String  passwordkey="passwordkey";
     public static  final String tokenkey="tokenkey";
+    public static final String loginkey="loginkey";
 
 
     SharedPreferences sharedpreferences;
@@ -43,82 +44,68 @@ public class LoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
+        if(loginkey.equals("true")) {
+            startActivity(new Intent(getApplicationContext(),FirstActivity.class));
+        }
         username=findViewById(R.id.etUsername);
         password=findViewById(R.id.etPassword);
         login=findViewById(R.id.btlogin);
+        signin=findViewById(R.id.bt_signin);
+
+        TaskDTO obj= new TaskDTO("","",getTaskId(),"getDone");
+        Log.d(TAG, "onCreate: "+getTaskId());
+       final String complete= obj.getDone();
+        System.out.println(complete);
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-               String name=username.getText().toString();
-               //String pass=password.getText().toString();
-               // String token=
+                    String name = username.getText().toString();
 
-
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString(usernamekey,name);
-                //editor.putString(passwordkey,pass);
-                //editor.putString();
-                editor.commit();
-                Toast.makeText(LoginActivity.this,"data stored",Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onClick: " + sharedpreferences.getString(usernamekey, ""));
-                //Log.d(TAG, "onClick: "+editor.toString());
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString(usernamekey, name);
+                    editor.putString(loginkey,"true");
+                    //editor.putString(passwordkey,pass);
+                    //editor.putString();
+                    editor.commit();
+                    Toast.makeText(LoginActivity.this, "Loged In!", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "onClick: " + sharedpreferences.getString(usernamekey, ""));
+                    //Log.d(TAG, "onClick: "+editor.toString());
 
 //                SharedPreferences sharedPreferences=getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE);
 //                sharedPreferences.edit().putString("token").commit();
 
 
-                Intent in=new Intent(LoginActivity.this,FirstActivity.class);
-                startActivity(in);
-               new sendLogin().execute();
-               //new sendGET().execute();
+                    Intent in = new Intent(LoginActivity.this, FirstActivity.class);
+                    startActivity(in);
+                    new sendLogin().execute();
+                    //new sendGET().execute();
 
+                }
+
+        });
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        //SignIn Code here
+
+        signin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent in=new Intent(LoginActivity.this,SignIn.class);
+                startActivity(in);
             }
         });
 
+
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
     }
-
-    /*public class sendGET extends AsyncTask<Void,Void,Void>
-    {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            try {
-                String BASE_URL = "http://192.168.100.21:8000";
-                URL url = new URL(BASE_URL);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("","application/json; Content-type ");
-                conn.getURL();
-                //int responsecode=conn.getResponseCode();
-
-                System.out.println("your enter url is"+url);
-                //System.out.println("your enter response code is"+responsecode);
-
-
-                BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuffer response= new StringBuffer();
-                String Container="";
-                while((Container=br.readLine())!=null)
-                {
-                    response.append(Container);
-                }
-                System.out.println("data is:"+response);
-                Log.d(TAG, "doInBackground: "+response);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-
-            }
-
-            return null;
-        }
-    }*/
 
     public class sendLogin extends AsyncTask<Void,Void,Void>
     {
@@ -140,8 +127,8 @@ public class LoginActivity extends AppCompatActivity
                 System.out.println("Your URL is"+url);
                 //System.out.println("Your Response code is"+responsecode);
 
-                //String data2="{\"username\":\"" + username.getText().toString()+"\" ,\"password\":\""+password.getText().toString()+"\"}";
-                String data2="{\"username\":\"" + "admin"+"\" ,\"password\":\""+"password"+"\"}";
+                String data2="{\"username\":\"" + username.getText().toString()+"\" ,\"password\":\""+password.getText().toString()+"\"}";
+               // String data2="{\"username\":\"" + "admin"+"\" ,\"password\":\""+"password"+"\"}";
                 //byte[] bobj=data2.getBytes(StandardCharsets.UTF_8);
                 OutputStream os=new DataOutputStream(conn.getOutputStream());
                 os.write(data2.getBytes());

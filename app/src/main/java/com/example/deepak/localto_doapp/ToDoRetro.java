@@ -54,7 +54,7 @@ public class ToDoRetro {
         return "ToDoRetro{" +
                 "subject='" + subject + '\'' +
                 ", date='" + date + '\'' +
-                ", auto_increment_id=" + auto_increment_id +
+                ", task_id=" + auto_increment_id +
                 ", done=" + done +
                 '}';
     }

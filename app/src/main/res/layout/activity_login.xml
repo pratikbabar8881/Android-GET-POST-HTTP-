@@ -1,50 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+
     <TextView
+        android:id="@+id/tvshow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="enter your usernmae"
+        android:text="enter your username"
         android:textSize="25sp"/>
+
 
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
+        android:layout_below="@+id/tvshow"
         android:hint="Username"
         />
 
     <TextView
+        android:id="@+id/dateshow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="enter your password"
+        android:layout_below="@+id/etUsername"
         android:textSize="25sp"/>
-
-
 
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
+        android:layout_below="@+id/dateshow"
         android:hint="Password"
         android:inputType="textPassword"
         />
+
+
 
     <Button
         android:id="@+id/btlogin"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/etPassword"
         android:text="Login"
-        android:layout_gravity="center"
 
         />
 
-
-
-
-</LinearLayout>
+    <Button
+        android:id="@+id/bt_signin"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="SIGNIN"
+        android:layout_gravity="center"
+        android:layout_marginStart="130dp"
+        android:layout_below="@+id/etPassword"
+        />
+</RelativeLayout>

@@ -114,22 +114,35 @@ public class FirstActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }*/
-        
 
+
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                Intent ins = new Intent(FirstActivity.this, ThirdActivity.class);
-          //      Log.d(TAG, "onNavigationItemSelected: true");
-                startActivity(ins);
 
-                return false;
+                //Intent ins = new Intent(getApplicationContext(), FirstActivity.class);
+          //      Log.d(TAG, "onNavigationItemSelected: true");
+
+                SharedPreferences preferences =getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
+
+                String tokenvalue=preferences.getString("tokenkey","");
+                SharedPreferences.Editor editor = preferences.edit();
+                Log.d(TAG, "onNavigationItemSelected: "+tokenvalue);
+
+                editor.clear();
+                editor.commit();
+                finish();
+                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                return true;
 
             }
         });
 
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -242,7 +255,7 @@ public class FirstActivity extends AppCompatActivity {
             protected Void doInBackground(Void... voids) {
 
 
-                String BASE_URL="https://demo-todo-rest.herokuapp.com/";
+                String BASE_URL="http://192.168.100.21:8000/login/";
 
                 try {
                     URL url = new URL(BASE_URL);

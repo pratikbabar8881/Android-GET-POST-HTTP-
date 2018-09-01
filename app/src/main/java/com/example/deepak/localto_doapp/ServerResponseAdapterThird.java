@@ -39,39 +39,40 @@ public class ServerResponseAdapterThird extends RecyclerView.Adapter<ServerRespo
     @Override
     public void onBindViewHolder(@NonNull final ServerResponseAdapterThird.UserViewHolder holder, final int position) {
         if(context instanceof ThirdActivity) {
-            holder.subjectDisplay.setText(Html.fromHtml("" + listuser.get(position).getSubject()));
-            holder.dateDisplay.setText(Html.fromHtml("" + listuser.get(position).getDate()));
-            holder.cb.setChecked(true);
-            holder.cb.setEnabled(false);
-            holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (listuser.get(position).getDone().equals("true")) {
+                holder.subjectDisplay.setText(Html.fromHtml("" + listuser.get(position).getSubject()));
+                holder.dateDisplay.setText(Html.fromHtml("" + listuser.get(position).getDate()));
+                holder.cb.setChecked(true);
+                holder.cb.setEnabled(false);
+                holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                    if(isChecked)
-                    {
-                        AlertDialog.Builder builder=new AlertDialog.Builder(context,android.R.style.Theme_Material_Dialog_Alert);
-                        builder.setTitle("Do you want to close the session").setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //DatabaseHandler db = new DatabaseHandler(context);
-                                //db.delete(listuser.get(position).getSubject());
-                                //db.add_check(listuser.get(position).getSubject(), listuser.get(position).getDate());
-                                //listuser.remove(position);
-                                notifyItemRemoved(position);
-                                notifyItemRangeChanged(position, listuser.size());
+                        if (isChecked) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+                            builder.setTitle("Do you want to close the session").setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //DatabaseHandler db = new DatabaseHandler(context);
+                                    //db.delete(listuser.get(position).getSubject());
+                                    //db.add_check(listuser.get(position).getSubject(), listuser.get(position).getDate());
+                                    //listuser.remove(position);
+                                    notifyItemRemoved(position);
+                                    notifyItemRangeChanged(position, listuser.size());
 
-                            }
-                        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                holder.cb.setChecked(true);
+                                    holder.cb.setChecked(true);
 
-                            }
-                        }).show();
+                                }
+                            }).show();
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
 

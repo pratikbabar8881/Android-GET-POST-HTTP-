@@ -1,7 +1,9 @@
 package com.example.deepak.localto_doapp;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,7 +36,7 @@ public class ThirdActivity extends AppCompatActivity {
     RetroRecycleAdapter adapter;
     ServerResponseAdapterThird responseAdapter1;
     RecyclerView recyclerView;
-
+    private static final String TAG = "TUDOAPP";
     protected void onCreate(Bundle savedInstanceState) {
 
 
@@ -83,14 +85,16 @@ public class ThirdActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                String BASE_URl = "http://192.168.100.21:8000/done";
+                String BASE_URl = "https://demo-todo-rest.herokuapp.com";
                 URL url = new URL(BASE_URl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.connect();
-                int responseCode=conn.getResponseCode();
+                //int responseCode=conn.getResponseCode();
                 conn.setRequestMethod("GET");
-
-                System.out.println("Your response code is"+responseCode);
+                String token=getToken();
+                Log.d(TAG, "TokenValue "+token);
+                conn.setRequestProperty("Authorization",token);
+                //System.out.println("Your response code is"+responseCode);
                 System.out.println("your url is"+ url);
 
                 BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -106,6 +110,9 @@ public class ThirdActivity extends AppCompatActivity {
                 System.out.println(task);
                 list.addAll(task.getList());
                 adapter.notifyDataSetChanged();
+                System.out.println("Your Date is:"+task.getList());
+                Log.d(TAG, "List "+task.getList());
+
 
             }
             catch(Exception e)
@@ -114,6 +121,16 @@ public class ThirdActivity extends AppCompatActivity {
             }
 
             return null;
+        }
+
+        public String getToken() {
+
+            SharedPreferences sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+
+            String tokenvalue= sharedpreferences.getString("tokenkey","");
+            return  tokenvalue;
+
+
         }
     }
 }

@@ -49,7 +49,7 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
             if (users.get(position).getDone().equals("false")) {
                 holder.nameDisplay.setText(Html.fromHtml(" " + users.get(position).getSubject()));
                 holder.classDisplay.setText(Html.fromHtml("" + users.get(position).getDate()));
-                holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                /*holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         Log.d("TAG", "onCheckedChanged: " + b);
@@ -79,45 +79,61 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
 
                     }
 
-                });
+                });*/
 
 
                 holder.ib.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        new DeleteRequest(users.get(position).getAuto_increment_id()).execute();
-                        notifyItemRemoved(position);
+                        new DeleteRequest(context, users.get(position).getTask_id()).execute();
+                        users.remove(holder.getAdapterPosition());
+                        notifyItemRemoved(holder.getAdapterPosition());
                     }
                 });
                 holder.update.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog alert = new AlertDialog.Builder(context).create();
+                       /* AlertDialog alert = new AlertDialog.Builder(context).create();
                         alert.setMessage("Do you want to update");
                         alert.setCancelable(true);
                         alert.setButton(DialogInterface.BUTTON_POSITIVE,"Yes", new DialogInterface.OnClickListener() {
+
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
                                 Intent in=new Intent(context,FourthActivity.class);
                                 context.startActivity(in);
                             }
-                        });
+                        });*/
 
-                        alert.setButton(DialogInterface.BUTTON_NEGATIVE, "no", new DialogInterface.OnClickListener() {
+                        /*alert.setButton(DialogInterface.BUTTON_NEGATIVE, "no", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent in=new Intent(context,FirstActivity.class);
                                 context.startActivity(in);
 
                             }
-                        });
+                        });*/
+
+                        Intent in=new Intent(context,FourthActivity.class);
+                        Log.d(TAG, "onClick: "+users.get(position).getTask_id());
+                        String id_ = Integer.toString(users.get(position).getTask_id());
+                        in.putExtra("id", id_);
+                        String sunject_name=users.get(position).getSubject();
+                        String date_value=users.get(position).getDate();
+                        in.putExtra("subject",sunject_name);
+                        in.putExtra("date",date_value);
+                        context.startActivity(in);
 
                     }
                 });
 
             }
+            /*else
+            {
+                users.remove(position);
+            }*/
         }
     }
 
@@ -131,7 +147,7 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
             super(v);
             nameDisplay = v.findViewById(R.id.name1);
             classDisplay = v.findViewById(R.id.date);
-            cb = v.findViewById(R.id.checkbox_meat);
+           // cb = v.findViewById(R.id.checkbox_meat);
             ib=v.findViewById(R.id.ib_delete);
             update=v.findViewById(R.id.ib_update);
 
@@ -141,17 +157,19 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
 
     public class DeleteRequest extends AsyncTask<Integer,Void,Void>
     {
-        public static final String MYPREFERENCE="myprefrence";
         int deleteId;
+        Context context;
 
         SharedPreferences sharedPreferences;
-        DeleteRequest(int id) {
+        DeleteRequest(Context context,int id)
+        {
+            this.context = context;
             this.deleteId = id;
         }
 
         @Override
         protected Void doInBackground(Integer... params) {
-            String BASE_URL="http://192.168.100.21:8000";
+            String BASE_URL="https://demo-todo-rest.herokuapp.com";
 
             try {
                 URL url = new URL(String.format("%s/%d/",BASE_URL,deleteId));
@@ -159,11 +177,9 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
 
 
                 conn.setRequestMethod("DELETE");
-
-                //SharedPreferences sharedPreferences=getSharedPreferences(MYPREFERENCE,Context.MODE_PRIVATE);
-           //     String token=getToken();
+                String token=getToken();
                 conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                //conn.setRequestProperty("Authorization","token");
+                conn.setRequestProperty("Authorization",token);
 
 
                 //conn.connect();
@@ -187,6 +203,15 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
             }
 
             return null;
+
+        }
+        public  String getToken() {
+
+            SharedPreferences sharedpreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+
+            String tokenvalue= sharedpreferences.getString("tokenkey","");
+            return  tokenvalue;
+
 
         }
 

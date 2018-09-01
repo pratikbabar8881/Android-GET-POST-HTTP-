@@ -120,19 +120,7 @@ public class SecondActivity extends AppCompatActivity {
         ////////////////////////////////////////////////////////////////////////////////////////////
         /*Update here */
 
-        final TextView update= findViewById(R.id.etupdate);
-        Button click=findViewById(R.id.Bupdate);
 
-        click.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Intent in=new Intent(SecondActivity.this,FourthActivity.class);
-                startActivity(in);
-       }
-
-        });
     }
 
     public void POST()

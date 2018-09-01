@@ -42,6 +42,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".FourthActivity"/>
+        <activity android:name=".SignIn"/>
     </application>
 
 </manifest>
