@@ -21,6 +21,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.UserViewHolder> {
@@ -48,7 +51,12 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
         if (context instanceof FirstActivity) {
             if (users.get(position).getDone().equals("false")) {
                 holder.nameDisplay.setText(Html.fromHtml(" " + users.get(position).getSubject()));
-                holder.classDisplay.setText(Html.fromHtml("" + users.get(position).getDate()));
+
+               // SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                //String formattedDate1 = df.format(users.get(position).getDate());
+
+                holder.classDisplay.setText(Html.fromHtml("" + CommanUtil.getDate(users.get(position).getDate())));
+
                 /*holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -121,7 +129,7 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
                         String id_ = Integer.toString(users.get(position).getTask_id());
                         in.putExtra("id", id_);
                         String sunject_name=users.get(position).getSubject();
-                        String date_value=users.get(position).getDate();
+                        String date_value=CommanUtil.getDate(users.get(position).getDate());
                         in.putExtra("subject",sunject_name);
                         in.putExtra("date",date_value);
                         context.startActivity(in);
@@ -147,6 +155,7 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
             super(v);
             nameDisplay = v.findViewById(R.id.name1);
             classDisplay = v.findViewById(R.id.date);
+
            // cb = v.findViewById(R.id.checkbox_meat);
             ib=v.findViewById(R.id.ib_delete);
             update=v.findViewById(R.id.ib_update);
@@ -169,7 +178,7 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
 
         @Override
         protected Void doInBackground(Integer... params) {
-            String BASE_URL="https://demo-todo-rest.herokuapp.com";
+            String BASE_URL="http://192.168.100.7:8000";
 
             try {
                 URL url = new URL(String.format("%s/%d/",BASE_URL,deleteId));

@@ -135,8 +135,12 @@ public class FirstActivity extends AppCompatActivity {
 
                 editor.clear();
                 editor.commit();
-                finish();
-                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                //finish();
+                Intent navigateToNextActivity=new Intent();
+                navigateToNextActivity.setClass(FirstActivity.this,LoginActivity.class);
+                navigateToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(navigateToNextActivity);
+
                 return true;
 
             }
@@ -255,7 +259,7 @@ public class FirstActivity extends AppCompatActivity {
             protected Void doInBackground(Void... voids) {
 
 
-                String BASE_URL="http://192.168.100.21:8000/login/";
+                String BASE_URL="http://192.168.100.7:8000/";
 
                 try {
                     URL url = new URL(BASE_URL);
@@ -273,6 +277,10 @@ public class FirstActivity extends AppCompatActivity {
                     //String token = preferences.getString("token","");
                     Log.d(TAG, "ttt: " + tokenvalue);
                     con.setRequestProperty("Authorization",tokenvalue);
+                    int responsecode=con.getResponseCode();
+                    System.out.println("response code is"+responsecode);
+                    Log.d(TAG, "responsecode "+responsecode);
+                    con.connect();
 
                    // con.setRequestProperty("Authorization",token);
 
@@ -314,7 +322,10 @@ public class FirstActivity extends AppCompatActivity {
                 SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
                 String tokenvalue= sharedpreferences.getString("tokenkey","");
+                Log.d(TAG, "getToken: "+tokenvalue);
+
                 return  tokenvalue;
+
 
 
             }

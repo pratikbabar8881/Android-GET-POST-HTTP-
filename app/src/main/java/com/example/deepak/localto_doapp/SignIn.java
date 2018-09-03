@@ -47,7 +47,7 @@ public class SignIn extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 new Post().execute();
-                Toast.makeText(SignIn.this,"Successfully SignIn",Toast.LENGTH_LONG).show();
+                Toast.makeText(SignIn.this,"Successfully SignUp",Toast.LENGTH_LONG).show();
                 Intent in=new Intent(SignIn.this,LoginActivity.class);
                 startActivity(in);
             }

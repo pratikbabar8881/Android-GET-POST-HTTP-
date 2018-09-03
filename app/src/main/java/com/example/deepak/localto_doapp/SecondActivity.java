@@ -1,5 +1,7 @@
 package com.example.deepak.localto_doapp;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -16,7 +18,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -52,6 +56,7 @@ public class SecondActivity extends AppCompatActivity {
     int Year_x, day_x, month_x;
 
 
+    @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
@@ -65,8 +70,38 @@ public class SecondActivity extends AppCompatActivity {
         final TextView date=findViewById(R.id.tvdate);
         date.setText(formattedDate);
 
-
         datepicker=findViewById(R.id.et_date);
+        datepicker.setClickable(false);
+        datepicker.setShowSoftInputOnFocus(false);
+
+        datepicker.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideSoftKeyboard(SecondActivity.this);
+                return true;
+            }
+        });
+
+        datepicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Calendar cal=Calendar.getInstance();
+                int year=cal.get(Calendar.YEAR);
+                int month=cal.get(Calendar.MONTH);
+                int day=cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dp=new DatePickerDialog(SecondActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        datepicker.setText( day + "/" + (month+1) + "/" + year);
+                    }
+                },year,month,day);
+                dp.show();
+
+            }
+        });
 
 
         Date d2=Calendar.getInstance().getTime();
@@ -123,6 +158,14 @@ public class SecondActivity extends AppCompatActivity {
 
     }
 
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
     public void POST()
     {
 
@@ -132,7 +175,7 @@ public class SecondActivity extends AppCompatActivity {
             public void run() {
                 try {
 
-                    String BASE_URL = "https://demo-todo-rest.herokuapp.com/";
+                    String BASE_URL = "http://192.168.100.7:8000";
                     URL url = new URL(BASE_URL);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");

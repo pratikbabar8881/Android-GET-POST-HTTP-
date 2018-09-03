@@ -36,8 +36,6 @@ class CheckedAdapter extends RecyclerView.Adapter<CheckedAdapter.CheckedViewHold
         holder.nameDisplay.setText(Html.fromHtml("" + users.get(position).getSubject()));
         holder.classDisplay.setText(Html.fromHtml("" + users.get(position).getDate()));
 
-
-
     }
 
     static class CheckedViewHolder extends RecyclerView.ViewHolder {

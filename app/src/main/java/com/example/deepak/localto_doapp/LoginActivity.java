@@ -37,7 +37,6 @@ public class LoginActivity extends AppCompatActivity
     public static  final String tokenkey="tokenkey";
     public static final String loginkey="loginkey";
 
-
     SharedPreferences sharedpreferences;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,10 +77,16 @@ public class LoginActivity extends AppCompatActivity
 //                sharedPreferences.edit().putString("token").commit();
 
 
-                    Intent in = new Intent(LoginActivity.this, FirstActivity.class);
-                    startActivity(in);
-                    new sendLogin().execute();
-                    //new sendGET().execute();
+//                    Intent in = new Intent(LoginActivity.this, FirstActivity.class);
+//                    startActivity(in);
+//
+                Intent navigateToNextActivity=new Intent();
+                navigateToNextActivity.setClass(LoginActivity.this,FirstActivity.class);
+                navigateToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(navigateToNextActivity);
+                new sendLogin().execute();
+
+                //new sendGET().execute();
 
                 }
 
@@ -113,7 +118,7 @@ public class LoginActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... voids) {
 
-            String BASE_URl="https://demo-todo-rest.herokuapp.com/login/";
+            String BASE_URl="http://192.168.100.7:8000/login/";
             try
             {
                 URL url=new URL(BASE_URl);

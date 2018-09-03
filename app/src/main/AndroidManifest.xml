@@ -29,7 +29,9 @@
         <activity
             android:name=".SecondActivity"
             android:label="@string/title_activity_second"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
 
 
         <activity android:name=".ThirdActivity"
@@ -41,7 +43,8 @@
             android:label="@string/title_activity_second"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".FourthActivity"/>
+        <activity android:name=".FourthActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".SignIn"/>
     </application>
 

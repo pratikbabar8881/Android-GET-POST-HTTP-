@@ -1,11 +1,18 @@
 package com.example.deepak.localto_doapp;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class TaskDTO
 {
     String subject;
     String date;
     int task_id;
     String done;
+
+
+    //public java.text.DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 
     public TaskDTO(String subject, String date, int task_id, String done) {
@@ -24,12 +31,18 @@ public class TaskDTO
     }
 
     public String getDate() {
+
+        //Date d1=Calendar.getInstance().getTime();
+       // SimpleDateFormat df=new SimpleDateFormat("dd/mm/yyyy");
+        //String date2=df.format(date);
+
         return date;
     }
 
     public void setDate(String date) {
         this.date = date;
     }
+
 
 
     public int getTask_id() {

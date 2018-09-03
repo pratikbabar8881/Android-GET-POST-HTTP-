@@ -1,5 +1,6 @@
 package com.example.deepak.localto_doapp;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -45,6 +47,7 @@ public class FourthActivity extends AppCompatActivity
 
         subject=findViewById(R.id.etUpdateSubject);
         date=findViewById(R.id.UpdateDate);
+        date.setClickable(true);
        // auto_increment_id=findViewById(R.id.etUpdateId);
          //done=findViewById(R.id.UpdateDone);
         update=findViewById(R.id.btnUpdate);
@@ -55,6 +58,28 @@ public class FourthActivity extends AppCompatActivity
         subject.setText(subjectUpdate);
         subject.setSelection(subject.getText().length());
         date.setText(dateUpdte);
+
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Calendar cal=Calendar.getInstance();
+                int year=cal.get(Calendar.YEAR);
+                int month=cal.get(Calendar.MONTH);
+                int day=cal.get(Calendar.DAY_OF_MONTH);
+
+
+                DatePickerDialog dp=new DatePickerDialog(FourthActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                        date.setText( i2 + "/" + (i1+1) + "/" + i);
+                    }
+                },year,month,day);
+                dp.show();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(date, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
 
         /////////////////////////////
 
@@ -131,7 +156,7 @@ public class FourthActivity extends AppCompatActivity
 
             try {
                 String jsonData = params[0];
-                String BASE_URl = "https://demo-todo-rest.herokuapp.com";
+                String BASE_URl = "http://192.168.100.7:8000";
                 Log.d(TAG, "doInBackground: ");
                 URL url = new URL(String.format("%s/%s/",BASE_URl,id));
                 HttpURLConnection conn=(HttpURLConnection) url.openConnection();
@@ -150,6 +175,11 @@ public class FourthActivity extends AppCompatActivity
                conn.setRequestProperty("Authorization",token);
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
+                //int responseCode=conn.getResponseCode();
+                //System.out.println("response code is:"+responseCode);
+                //conn.connect();
+
+
 
                 //int responseCode=conn.getResponseCode();
                 Log.d(TAG, "doInBackground: ");
@@ -158,11 +188,13 @@ public class FourthActivity extends AppCompatActivity
                 System.out.println("Your enter url is"+url);
                 //System.out.println("Your Enter response code is"+responseCode);
 
-                //sending data
 
-                OutputStream os=conn.getOutputStream();
-                os.write(jsonData.getBytes());
-                Log.d(TAG, "doInBackground: ");
+                    OutputStream os = conn.getOutputStream();
+                    Log.d(TAG, "os "+os);
+                    os.write(jsonData.getBytes());
+                    Log.d(TAG, "doInBackground: ");
+
+
 
                 //receives data
                 InputStream is = conn.getInputStream();
@@ -173,9 +205,9 @@ public class FourthActivity extends AppCompatActivity
                 }
                 Log.d("json api", "DoUpdateProduct.doInBackground Json return: " + result);
 
-                Log.d(TAG, "send data: ");
+                Log.d(TAG, "send data: "+result);
                 is.close();
-                os.close();
+                //os.close();
                 conn.disconnect();
 
 
@@ -203,6 +235,7 @@ public class FourthActivity extends AppCompatActivity
             SharedPreferences sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
 
             String tokenvalue= sharedpreferences.getString("tokenkey","");
+            Log.d(TAG, "getToken: "+tokenvalue);
             return  tokenvalue;
 
 
