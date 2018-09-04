@@ -56,6 +56,7 @@ public class SecondActivity extends AppCompatActivity {
     int Year_x, day_x, month_x;
 
 
+
     @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,65 +72,28 @@ public class SecondActivity extends AppCompatActivity {
         date.setText(formattedDate);
 
         datepicker=findViewById(R.id.et_date);
-        datepicker.setClickable(false);
         datepicker.setShowSoftInputOnFocus(false);
-
-        datepicker.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideSoftKeyboard(SecondActivity.this);
-                return true;
-            }
-        });
-
-        datepicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final Calendar cal=Calendar.getInstance();
-                int year=cal.get(Calendar.YEAR);
-                int month=cal.get(Calendar.MONTH);
-                int day=cal.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog dp=new DatePickerDialog(SecondActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        datepicker.setText( day + "/" + (month+1) + "/" + year);
-                    }
-                },year,month,day);
-                dp.show();
-
-            }
-        });
-
 
         Date d2=Calendar.getInstance().getTime();
         SimpleDateFormat s3=new SimpleDateFormat("EEEE");
         String s4=s3.format(d2);
-        TextView day=findViewById(R.id.tvday1);
-        day.setText(s4);
+        TextView day1=findViewById(R.id.tvday1);
+        day1.setText(s4);
+
+        datepicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDate();
+            }
+        });
 
         ImageButton ib1=findViewById(R.id.ibcal);
         ib1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Calendar cal=Calendar.getInstance();
-                int year=cal.get(Calendar.YEAR);
-                int month=cal.get(Calendar.MONTH);
-                int day=cal.get(Calendar.DAY_OF_MONTH);
-
-
-                DatePickerDialog dp=new DatePickerDialog(SecondActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        datepicker.setText( i2 + "/" + (i1+1) + "/" + i);
-                    }
-                },year,month,day);
-                dp.show();
+                getDate();
             }
         });
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_check);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -147,16 +111,25 @@ public class SecondActivity extends AppCompatActivity {
                                });
 
 
-                //Intent in=new Intent(SecondActivity.this,FirstActivity.class);
-                //startActivity(in);
-
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        /*Update here */
-
-
     }
+
+    public void getDate()
+    {
+        final Calendar cal=Calendar.getInstance();
+        int year=cal.get(Calendar.YEAR);
+        int month=cal.get(Calendar.MONTH);
+        int day=cal.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dp=new DatePickerDialog(SecondActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                datepicker.setText( day + "/" + (month+1) + "/" + year);
+            }
+        },year,month,day);
+        dp.show();
+    }
+
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
@@ -175,8 +148,8 @@ public class SecondActivity extends AppCompatActivity {
             public void run() {
                 try {
 
-                    String BASE_URL = "http://192.168.100.7:8000";
-                    URL url = new URL(BASE_URL);
+
+                    URL url = new URL(FirstActivity.BASE_URL);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
 
@@ -226,9 +199,6 @@ public class SecondActivity extends AppCompatActivity {
               Intent in=new Intent(SecondActivity.this,FirstActivity.class);
               startActivity(in);
 
-
-
-
 }
     public String getToken() {
 
@@ -242,21 +212,6 @@ public class SecondActivity extends AppCompatActivity {
 
 }
 
-
-               /* try {
-                    if (subject.getText().toString() != null || date.getText().toString() != null) {
-                        Intent in = new Intent(SecondActivity.this, FirstActivity.class);
-
-
-                                           Log.d("TAG", "onClick: " + subject.getText().toString() + "" + date2.getText().toString());
-                        final DatabaseHandler databaseHandler = new DatabaseHandler(SecondActivity.this);
-                        //databaseHandler.addtodo(new ToDoRetro(subject.getText().toString(), date2.getText().toString()));
-                        startActivity(in);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-
-                }*/
 
 
 

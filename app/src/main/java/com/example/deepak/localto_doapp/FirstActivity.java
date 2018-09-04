@@ -56,6 +56,7 @@ public class FirstActivity extends AppCompatActivity {
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String usernamekey="namekey";
     public static final String passwordkey="passwordkey";
+    public static String BASE_URL="https://demo-todo-rest.herokuapp.com/";
 
     private static final String TAG = "TUDOAPP";
     FloatingActionButton fab;
@@ -105,19 +106,6 @@ public class FirstActivity extends AppCompatActivity {
             new HttpGet().execute();
         }
 
-        /*if(li!=null)
-        {
-            try {
-                DELETE();
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }*/
-
-
-
-
         ///////////////////////////////////////////////////////////////////////////////////////////////
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -159,120 +147,32 @@ public class FirstActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(FirstActivity.this, SecondActivity.class);
                 startActivity(i);
-
-
             }
 
 
         });
 
-
-    //    DatabaseHandler db = new DatabaseHandler(this);
-//        List<ToDoList> li = db.display();
         RecyclerView recyclerView = findViewById(R.id.re);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ServerResponseAdapter recyclerAdapter = new ServerResponseAdapter(this, li);
         recyclerView.setAdapter(recyclerAdapter);
 
     }
-    /*public void GET()
-    {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String BASE_URL="http://192.168.100.21:8000";
 
-                try {
-                    URL url = new URL(BASE_URL);
-                    HttpURLConnection con=(HttpURLConnection) url.openConnection();
-                    con.setRequestMethod("GET");
-                    int responsecode=con.getResponseCode();
-                    System.out.println("response code is "+responsecode);
-
-                    BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    StringBuffer response= new StringBuffer();
-                    String container="";
-                    while((container=br.readLine())!=null)
-                    {
-                        response.append(container);
-                    }
-                    br.close();
-                    System.out.println(response);
-                    Wrapper task=new Gson().fromJson(response.toString(),Wrapper.class);
-                    System.out.println(task.toString());
-                    li.addAll(task.getList());
-                    adapter.notifyDataSetChanged();
-                    Log.d(TAG, "onCreate: ");
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-                Log.d(TAG, "run: running");
-
-            }
-        }).start();
-    }
-*/
-   /* public void DELETE()throws Exception
-    {
-        String BASE_URL="192.168.100.11/8000/{2}";
-        URL url=new URL(BASE_URL);
-        HttpURLConnection conn=(HttpURLConnection) url.openConnection();
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Content-Type","Application/Json; charset=UTF-8");
-        conn.setRequestMethod("DELETE");
-
-        int ResponseCode=conn.getResponseCode();
-        System.out.println("Your ResponseCode is "+ResponseCode);
-        System.out.println("Your Url is "+url);
-
-        BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        StringBuffer response=new StringBuffer();
-
-        String Container;
-
-        while((Container=br.readLine())!=null)
-        {
-            response.append(Container);
-        }
-
-        System.out.println(response);
-
-
-    }
-*/
-
-        /*protected String doInBackground(String... strings) {
-
-            GET();
-            return li.toString();
-        }
-*/
-
-
-        public class HttpGet extends AsyncTask<Void,Void,Void>
+    public class HttpGet extends AsyncTask<Void,Void,Void>
         {
             public static final String MyPREFERENCES = "MyPrefs" ;
             @Override
             protected Void doInBackground(Void... voids) {
 
-
-                String BASE_URL="http://192.168.100.7:8000/";
-
                 try {
                     URL url = new URL(BASE_URL);
                     HttpURLConnection con=(HttpURLConnection) url.openConnection();
                     con.setRequestMethod("GET");
-                    //Log.d(TAG, "doInBackground: " + getToken());
                     String token = getToken();
                     SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
                     String tokenvalue= sharedpreferences.getString("tokenkey","");
-                    //Log.d(TAG, "doInBackground: "+token);
-                    //int responsecode=con.getResponseCode();
-                    //System.out.println("response code is "+responsecode);
                     con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                     //String token = preferences.getString("token","");
                     Log.d(TAG, "ttt: " + tokenvalue);
@@ -301,18 +201,10 @@ public class FirstActivity extends AppCompatActivity {
                     li.addAll(task.getList());
                     adapter.notifyDataSetChanged();
                     Log.d(TAG, "result "+task);
-                   // JSONObject jsonObject = new JSONObject(response.toString());
-                    //String token1 = jsonObject.getJSONObject("token").getString("token");
-                    //System.out.println(token1);
-                    //Log.d(TAG, "token: "+token1);
-
-            //        Log.d(TAG, "onCreate: ");
                 }catch (Exception e)
                 {
                     e.printStackTrace();
                 }
-
-              //  Log.d(TAG, "run: running");
 
                 return null;
             }
@@ -325,7 +217,6 @@ public class FirstActivity extends AppCompatActivity {
                 Log.d(TAG, "getToken: "+tokenvalue);
 
                 return  tokenvalue;
-
 
 
             }

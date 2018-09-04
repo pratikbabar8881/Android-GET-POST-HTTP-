@@ -94,9 +94,29 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
                     @Override
                     public void onClick(View v) {
 
-                        new DeleteRequest(context, users.get(position).getTask_id()).execute();
-                        users.remove(holder.getAdapterPosition());
-                        notifyItemRemoved(holder.getAdapterPosition());
+                        AlertDialog alertDialog=new AlertDialog.Builder(context).create();
+                        alertDialog.setTitle("Delete");
+                        alertDialog.setMessage("Do You Want To Delete");
+                        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE,"YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new DeleteRequest(context, users.get(position).getTask_id()).execute();
+                                users.remove(holder.getAdapterPosition());
+                                notifyItemRemoved(holder.getAdapterPosition());
+                            }
+                        });
+
+                        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent in=new Intent(context,FirstActivity.class);
+                                context.startActivity(in);
+
+
+                            }
+                        });
+                        alertDialog.show();
+
                     }
                 });
                 holder.update.setOnClickListener(new View.OnClickListener() {
@@ -178,10 +198,10 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
 
         @Override
         protected Void doInBackground(Integer... params) {
-            String BASE_URL="http://192.168.100.7:8000";
+            //String BASE_URL="http://192.168.100.7:8000";
 
             try {
-                URL url = new URL(String.format("%s/%d/",BASE_URL,deleteId));
+                URL url = new URL(String.format("%s/%d/",FirstActivity.BASE_URL,deleteId));
                 HttpURLConnection conn=(HttpURLConnection) url.openConnection();
 
 

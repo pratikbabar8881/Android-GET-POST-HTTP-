@@ -85,8 +85,8 @@ public class ThirdActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                String BASE_URl = "https://demo-todo-rest.herokuapp.com";
-                URL url = new URL(BASE_URl);
+                //String BASE_URl = "https://demo-todo-rest.herokuapp.com";
+                URL url = new URL(FirstActivity.BASE_URL);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.connect();
                 //int responseCode=conn.getResponseCode();

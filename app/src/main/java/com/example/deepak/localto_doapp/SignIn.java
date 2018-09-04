@@ -73,6 +73,7 @@ public class SignIn extends AppCompatActivity
 
                 String data2="{\"username\":\"" +username.getText().toString()+"\",\"password\":\""+password.getText().toString()+"\"}";
                 Log.d(TAG, "senddata: "+data2);
+
                 OutputStream os=new DataOutputStream(conn.getOutputStream());
                 os.write(data2.getBytes());
 
@@ -92,6 +93,7 @@ public class SignIn extends AppCompatActivity
                 System .out.println(sessionResponse.getToken());
                 System .out.println(sessionResponse.getPassword());
                 System .out.println(sessionResponse.getUsername());
+                Log.d(TAG, "password "+sessionResponse.getPassword());
 
                 SharedPreferences sharedPreferences=getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor=sharedPreferences.edit();

@@ -1,5 +1,6 @@
 package com.example.deepak.localto_doapp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -8,14 +9,17 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -30,19 +34,33 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class FourthActivity extends AppCompatActivity
 {
+
+     EditText subject,date,auto_increment_id,done;
+    FloatingActionButton update;
+
+    TextView dateView,dayView;
     private static final String TAG="todoapp";
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_four);
 
-        //Log.d(TAG, "onCreate: " + id);
-        final EditText subject,date,auto_increment_id,done;
-        Button update;
+
+
+        dateView=findViewById(R.id.tvdate);
+        dayView=findViewById(R.id.tvday1);
+
+        Date mydate=Calendar.getInstance().getTime();
+        SimpleDateFormat sdf=new SimpleDateFormat("dd/mm/yyyy");
+        String formatedDate2=sdf.format(mydate);
+        dateView.setText(formatedDate2);
 
 
         subject=findViewById(R.id.etUpdateSubject);
@@ -59,25 +77,18 @@ public class FourthActivity extends AppCompatActivity
         subject.setSelection(subject.getText().length());
         date.setText(dateUpdte);
 
+        Date mydate2=Calendar.getInstance().getTime();
+        SimpleDateFormat sdf1=new SimpleDateFormat("EEEE");
+        String formatedDay=sdf1.format(mydate2);
+        dayView.setText(formatedDay);
+
+
+        date.setShowSoftInputOnFocus(false);
+
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final Calendar cal=Calendar.getInstance();
-                int year=cal.get(Calendar.YEAR);
-                int month=cal.get(Calendar.MONTH);
-                int day=cal.get(Calendar.DAY_OF_MONTH);
-
-
-                DatePickerDialog dp=new DatePickerDialog(FourthActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        date.setText( i2 + "/" + (i1+1) + "/" + i);
-                    }
-                },year,month,day);
-                dp.show();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(date, InputMethodManager.SHOW_IMPLICIT);
+                getDate();
             }
         });
 
@@ -87,19 +98,7 @@ public class FourthActivity extends AppCompatActivity
         ib1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Calendar cal=Calendar.getInstance();
-                int year=cal.get(Calendar.YEAR);
-                int month=cal.get(Calendar.MONTH);
-                int day=cal.get(Calendar.DAY_OF_MONTH);
-
-
-                DatePickerDialog dp=new DatePickerDialog(FourthActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        date.setText( i2 + "/" + (i1+1) + "/" + i);
-                    }
-                },year,month,day);
-                dp.show();
+                getDate();
             }
         });
 
@@ -143,6 +142,32 @@ public class FourthActivity extends AppCompatActivity
 
     }
 
+    public static void hideSoftKeyboard1(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    public void getDate()
+    {
+
+        final Calendar cal=Calendar.getInstance();
+        int year=cal.get(Calendar.YEAR);
+        int month=cal.get(Calendar.MONTH);
+        int day=cal.get(Calendar.DAY_OF_MONTH);
+
+
+        DatePickerDialog dp=new DatePickerDialog(FourthActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                date.setText( i2 + "/" + (i1+1) + "/" + i);
+            }
+        },year,month,day);
+        dp.show();
+    }
+
     class sendPut extends AsyncTask<String,Void,Void>
     {
 
@@ -156,7 +181,7 @@ public class FourthActivity extends AppCompatActivity
 
             try {
                 String jsonData = params[0];
-                String BASE_URl = "http://192.168.100.7:8000";
+                String BASE_URl = "https://demo-todo-rest.herokuapp.com";
                 Log.d(TAG, "doInBackground: ");
                 URL url = new URL(String.format("%s/%s/",BASE_URl,id));
                 HttpURLConnection conn=(HttpURLConnection) url.openConnection();
@@ -175,10 +200,6 @@ public class FourthActivity extends AppCompatActivity
                conn.setRequestProperty("Authorization",token);
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
-                //int responseCode=conn.getResponseCode();
-                //System.out.println("response code is:"+responseCode);
-                //conn.connect();
-
 
 
                 //int responseCode=conn.getResponseCode();
@@ -197,7 +218,7 @@ public class FourthActivity extends AppCompatActivity
 
 
                 //receives data
-                InputStream is = conn.getInputStream();
+               /* InputStream is = conn.getInputStream();
                 String result = "";
                 int byteCharacter;
                 while ((byteCharacter = is.read()) != -1) {
@@ -208,19 +229,19 @@ public class FourthActivity extends AppCompatActivity
                 Log.d(TAG, "send data: "+result);
                 is.close();
                 //os.close();
-                conn.disconnect();
+                conn.disconnect();*/
 
-
-
-                /*BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+               //recieves data
+                BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuffer response=new StringBuffer();
                 String Container="";
-                while((Container=br.readLine())!=null)
+                while ((Container=br.readLine())!=null)
                 {
                     response.append(Container);
-
                 }
-                System.out.println(response);*/
+                System.out.println("Your resonse is "+response);
+                conn.disconnect();
+                br.close();
 
             }
             catch (Exception e)
@@ -241,5 +262,14 @@ public class FourthActivity extends AppCompatActivity
 
         }
     }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
 
 }

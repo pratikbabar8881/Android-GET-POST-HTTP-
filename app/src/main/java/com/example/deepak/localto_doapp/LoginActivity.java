@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... voids) {
 
-            String BASE_URl="http://192.168.100.7:8000/login/";
+            String BASE_URl="https://demo-todo-rest.herokuapp.com/login/";
             try
             {
                 URL url=new URL(BASE_URl);
