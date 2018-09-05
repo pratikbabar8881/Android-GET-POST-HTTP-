@@ -20,6 +20,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -58,7 +59,7 @@ public class FourthActivity extends AppCompatActivity
         dayView=findViewById(R.id.tvday1);
 
         Date mydate=Calendar.getInstance().getTime();
-        SimpleDateFormat sdf=new SimpleDateFormat("dd/mm/yyyy");
+        SimpleDateFormat sdf=new SimpleDateFormat("dd-MMM-yyyy");
         String formatedDate2=sdf.format(mydate);
         dateView.setText(formatedDate2);
 
@@ -108,35 +109,37 @@ public class FourthActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                String sub=subject.getText().toString();
-         //       int id = Integer.parseInt(auto_increment_id.getText().toString());
+                String sub = subject.getText().toString();
+                //       int id = Integer.parseInt(auto_increment_id.getText().toString());
                 //String doing=done.getText().toString();
-                String date1=date.getText().toString();
+                String date1 = date.getText().toString();
+
+                if (sub.equals("")) {
+
+                    Toast.makeText(FourthActivity.this, "Enter invalid Subject and Date", Toast.LENGTH_LONG).show();
+                } else {
+                    TaskUpdate details = new TaskUpdate(sub, date1);
+                    JsonArray js = new JsonArray();
+                    JsonObject jProduct = new JsonObject();
 
 
-                TaskUpdate details=new TaskUpdate(sub,date1);
-                JsonArray js=new JsonArray();
-                JsonObject jProduct=new JsonObject();
-
-
-                JSONArray jProducts = new JSONArray();
-                JSONObject jProduct1 = new JSONObject();
+                    JSONArray jProducts = new JSONArray();
+                    JSONObject jProduct1 = new JSONObject();
 
                     try {
                         jProduct1.put("subject", details.subject);
                         jProduct1.put("date", details.date);
                         jProducts.put(jProduct1);
 
-                         String jsonData = jProduct1.toString();
-
-
-                new sendPut().execute(jsonData);
-                    }catch (Exception e)
-                    {
+                        String jsonData = jProduct1.toString();
+                        new sendPut().execute(jsonData);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Intent in= new Intent(FourthActivity.this,FirstActivity.class);
+                    Intent in = new Intent(FourthActivity.this, FirstActivity.class);
                     startActivity(in);
+
+                }
             }
         });
 
@@ -181,7 +184,7 @@ public class FourthActivity extends AppCompatActivity
 
             try {
                 String jsonData = params[0];
-                String BASE_URl = "https://demo-todo-rest.herokuapp.com";
+                String BASE_URl = "http://192.168.100.7:7000";
                 Log.d(TAG, "doInBackground: ");
                 URL url = new URL(String.format("%s/%s/",BASE_URl,id));
                 HttpURLConnection conn=(HttpURLConnection) url.openConnection();
@@ -234,12 +237,12 @@ public class FourthActivity extends AppCompatActivity
                //recieves data
                 BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuffer response=new StringBuffer();
-                String Container="";
-                while ((Container=br.readLine())!=null)
+                String container="";
+                while ((container=br.readLine())!=null)
                 {
-                    response.append(Container);
+                    response.append(container);
                 }
-                System.out.println("Your resonse is "+response);
+                System.out.println("Your response is "+response);
                 conn.disconnect();
                 br.close();
 

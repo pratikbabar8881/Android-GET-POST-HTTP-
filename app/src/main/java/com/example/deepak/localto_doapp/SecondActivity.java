@@ -55,7 +55,10 @@ public class SecondActivity extends AppCompatActivity {
     Calendar currentdate;
     int Year_x, day_x, month_x;
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,14 +102,23 @@ public class SecondActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
                                    @Override
                                    public void onClick(View v) {
+                                      String subjectValidation= subject.getText().toString();
+                                      String dateValidation=datepicker.getText().toString();
+                                       if(subjectValidation.equals("")|| dateValidation.equals(""))
+                                       {
+                                           Toast.makeText(SecondActivity.this,"Enter Invalid Subject and Date",Toast.LENGTH_LONG).show();
 
-                                        try {
-                                            POST();
-                                            Toast.makeText(SecondActivity.this,"data stored",Toast.LENGTH_SHORT).show();
-                                        }catch (Exception e)
-                                        {
-                                            e.printStackTrace();
-                                        }
+                                       }
+
+                                       else {
+                                           try {
+                                               POST();
+                                               //onBackPressed();
+                                               Toast.makeText(SecondActivity.this, "data stored", Toast.LENGTH_SHORT).show();
+                                           } catch (Exception e) {
+                                               e.printStackTrace();
+                                           }
+                                       }
                                    }
                                });
 
@@ -188,16 +200,15 @@ public class SecondActivity extends AppCompatActivity {
                     } else {
                         System.out.println("connection failed");
                     }
-
-
+                    //onBackPressed();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
                 }).start();
 
-              Intent in=new Intent(SecondActivity.this,FirstActivity.class);
-              startActivity(in);
+             Intent in=new Intent(SecondActivity.this,FirstActivity.class);
+             startActivity(in);
 
 }
     public String getToken() {

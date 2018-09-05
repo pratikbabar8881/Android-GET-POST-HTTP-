@@ -28,7 +28,6 @@ import java.util.List;
 
 class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.UserViewHolder> {
 
-    //public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String TAG="todo";
     protected List<TaskDTO> users;
     protected Context context;
@@ -109,8 +108,8 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
                         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent in=new Intent(context,FirstActivity.class);
-                                context.startActivity(in);
+//                                Intent in=new Intent(context,FirstActivity.class);
+//                                context.startActivity(in);
 
 
                             }
@@ -198,10 +197,10 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
 
         @Override
         protected Void doInBackground(Integer... params) {
-            //String BASE_URL="http://192.168.100.7:8000";
+            String BASE_URL="http://192.168.100.7:7000";
 
             try {
-                URL url = new URL(String.format("%s/%d/",FirstActivity.BASE_URL,deleteId));
+                URL url = new URL(String.format("%s/%d/",BASE_URL,deleteId));
                 HttpURLConnection conn=(HttpURLConnection) url.openConnection();
 
 
@@ -243,12 +242,6 @@ class ServerResponseAdapter extends RecyclerView.Adapter<ServerResponseAdapter.U
 
 
         }
-
-//        public String getToken() {
-//
-//            String tokenvalue=sharedPreferences.getString("tokenkey","");
-//            return  tokenvalue;
-//        }
 
 
     }

@@ -31,9 +31,12 @@ import com.google.gson.Gson;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,7 +59,7 @@ public class FirstActivity extends AppCompatActivity {
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String usernamekey="namekey";
     public static final String passwordkey="passwordkey";
-    public static String BASE_URL="https://demo-todo-rest.herokuapp.com/";
+    public static String BASE_URL="http://192.168.100.7:7000";
 
     private static final String TAG = "TUDOAPP";
     FloatingActionButton fab;
@@ -101,8 +104,6 @@ public class FirstActivity extends AppCompatActivity {
 
         SharedPreferences sharedpreferences;
         if (li.isEmpty()) {
-            sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-
             new HttpGet().execute();
         }
 
@@ -159,6 +160,7 @@ public class FirstActivity extends AppCompatActivity {
 
     }
 
+
     public class HttpGet extends AsyncTask<Void,Void,Void>
         {
             public static final String MyPREFERENCES = "MyPrefs" ;
@@ -201,6 +203,7 @@ public class FirstActivity extends AppCompatActivity {
                     li.addAll(task.getList());
                     adapter.notifyDataSetChanged();
                     Log.d(TAG, "result "+task);
+
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -208,7 +211,6 @@ public class FirstActivity extends AppCompatActivity {
 
                 return null;
             }
-
             public String getToken() {
 
                 SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -221,6 +223,7 @@ public class FirstActivity extends AppCompatActivity {
 
             }
         }
+
 }
 
 

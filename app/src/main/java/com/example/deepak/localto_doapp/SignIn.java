@@ -60,7 +60,7 @@ public class SignIn extends AppCompatActivity
         @Override
         protected Void doInBackground(String... strings) {
 
-            String BASE_URL="https://demo-todo-rest.herokuapp.com/signup/";
+            String BASE_URL="http://192.168.100.7:7000/signup/";
             try {
                 URL url = new URL(BASE_URL);
                 HttpURLConnection conn=(HttpURLConnection) url.openConnection();

@@ -62,29 +62,23 @@ public class LoginActivity extends AppCompatActivity
             public void onClick(View v) {
 
                     String name = username.getText().toString();
+                    String passwordValue=password.getText().toString();
 
+                    if (name.equals("") && passwordValue.equals("")){
+
+                        Toast.makeText(LoginActivity.this, "Please enter user name and password", Toast.LENGTH_SHORT).show();
+                    }else {
+                        new sendLogin().execute();
+                    }
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString(usernamekey, name);
+                    editor.putString(passwordkey,passwordValue);
                     editor.putString(loginkey,"true");
-                    //editor.putString(passwordkey,pass);
-                    //editor.putString();
                     editor.commit();
-                    Toast.makeText(LoginActivity.this, "Loged In!", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "onClick: " + sharedpreferences.getString(usernamekey, ""));
-                    //Log.d(TAG, "onClick: "+editor.toString());
-
-//                SharedPreferences sharedPreferences=getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE);
-//                sharedPreferences.edit().putString("token").commit();
 
 
-//                    Intent in = new Intent(LoginActivity.this, FirstActivity.class);
-//                    startActivity(in);
-//
-                Intent navigateToNextActivity=new Intent();
-                navigateToNextActivity.setClass(LoginActivity.this,FirstActivity.class);
-                navigateToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(navigateToNextActivity);
-                new sendLogin().execute();
+
 
                 //new sendGET().execute();
 
@@ -118,7 +112,7 @@ public class LoginActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... voids) {
 
-            String BASE_URl="https://demo-todo-rest.herokuapp.com/login/";
+            String BASE_URl="http://192.168.100.7:7000/login/";
             try
             {
                 URL url=new URL(BASE_URl);
@@ -158,6 +152,13 @@ public class LoginActivity extends AppCompatActivity
                 SharedPreferences.Editor editor=sharedPreferences.edit();
                 editor.putString("tokenkey",sessionResponse.getToken());
                 editor.apply();
+
+                if (sessionResponse.getToken()!=null){
+                    Intent navigateToNextActivity=new Intent();
+                    navigateToNextActivity.setClass(LoginActivity.this,FirstActivity.class);
+                    navigateToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(navigateToNextActivity);
+                }
                 Log.d(TAG, "doInBackground: "+sharedPreferences.getString("tokenkey",""));
                 //Log.d(TAG, "session response "+sessionReponse.getToken());
                 //JsonParser parse=new JsonParser();
